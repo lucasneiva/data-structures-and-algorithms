@@ -11,17 +11,22 @@ typedef struct {
 
 void iniciarTrilho(Trilho*);
 void insere(Trilho*, char);
-char remove(Trilho*);
+char removeVagao(Trilho*);
 int comparar(Trilho*, Trilho*);
-int testarVazio(Trilho*);
+int estaVazio(Trilho*);
+void transferir(Trilho*, Trilho*);
+void inverter(Trilho*);
+void printTrilho(Trilho*);
 
 int main() {
     int N;
     char vagao;
-    Trilho a, b, aux;
+    Trilho a, b, aux, desejado;
+
     iniciarTrilho(&a);
     iniciarTrilho(&b);
     iniciarTrilho(&aux);
+    iniciarTrilho(&desejado);
 
     while (true)
     {
@@ -30,23 +35,42 @@ int main() {
         if (N <= 0)
             break;
         
+        iniciarTrilho(&a);
+        iniciarTrilho(&b);
+        iniciarTrilho(&aux);
+        iniciarTrilho(&desejado);
+
         for (int i = 0; i < N; i++)
         {
+            getchar();
             scanf("%c", &vagao);
             insere(&a, vagao);
         }
         
         for (int i = 0; i < N; i++)
         {
+            getchar();
             scanf("%c", &vagao);
-            insere(&b, vagao);
-        }
-
-        while (!testarVazio(&a))
-        {
-            remove(&a);
+            insere(&desejado, vagao);
         }
         
+        inverter(&desejado);
+        inverter(&a);
+
+        while (!estaVazio(&a) || aux.final < N)
+        {
+            transferir(&a, &aux);
+            if (comparar(&aux, &desejado))
+            {
+                transferir(&a, &b);
+            }
+        }
+        
+
+        printTrilho(&a);
+        printTrilho(&aux);
+        printTrilho(&b);
+        printTrilho(&desejado);
 
     }
     
@@ -61,12 +85,12 @@ void insere(Trilho* trilho, char vagao) {
     trilho->vagoes[trilho->final++] = vagao; 
 }
 
-char remove(Trilho* trilho) {
+char removeVagao(Trilho* trilho) {
     return trilho->vagoes[--trilho->final];
 }
 
 int comparar(Trilho* trilho1, Trilho* trilho2) {
-    if (testarVazio(&trilho1) || testarVazio(&trilho2))
+    if (estaVazio(trilho1) || estaVazio(trilho2))
         return false;
     
     if (trilho1->vagoes[trilho1->final-1] == trilho2->vagoes[trilho2->final-1])
@@ -75,10 +99,36 @@ int comparar(Trilho* trilho1, Trilho* trilho2) {
         return false;
 }
 
-int testarVazio(Trilho* trilho) {
+int estaVazio(Trilho* trilho) {
     if (trilho->final == 0)
         return true;
     else
         return false;
+}
+
+void transferir(Trilho* origem, Trilho* destino) {
+    insere(destino, removeVagao(origem));
+}
+
+void inverter(Trilho* trilho) {
+    Trilho aux;
+    iniciarTrilho(&aux);
+    while (!estaVazio(trilho))
+    {
+        transferir(trilho, &aux);
+    }
+    while (!estaVazio(&aux))
+    {
+        transferir(&aux, trilho);
+    }
+}
+
+void printTrilho(Trilho* trilho) {
+    printf("Trilho: ");
+    while (!estaVazio(trilho))
+    {
+        printf("%c ", trilho->vagoes[--trilho->final]);   
+    }
+    printf("\n");
 }
 
