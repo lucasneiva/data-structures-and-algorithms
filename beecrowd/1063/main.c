@@ -66,7 +66,7 @@ int main() {
             }
         }
         
-
+        aaa
         printTrilho(&a);
         printTrilho(&aux);
         printTrilho(&b);
