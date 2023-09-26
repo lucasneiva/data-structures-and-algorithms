@@ -1,2 +1,2 @@
-# programacao-competitiva
- Soluções de questões de programação competitiva.
+# Estrutura de Dados
+ Conteúdo desenvolvido na disciplina Estrutura de Dados
