@@ -56,9 +56,11 @@ void descarregar(TPilha *pOrig, TPilha *pDest) {
 }
 void printPilha(TPilha* p, char* cabec) {
     printf("%s", cabec);
+    int aux = p->final;
     while (!estaVazio(p))
     {
         printf("%c ", p->letras[--p->final]);   
     }
+    p->final = aux;
     printf("\n");
 }

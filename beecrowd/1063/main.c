@@ -58,14 +58,17 @@ int main() {
                 printf("I");
             }
 
-            if (estaVazio(&a) && !compTop(&aux, &b))
+            if (estaVazio(&a) && (!compTop(&aux, &desejado) || estaVazio(&aux)))
             {
-                printf(" Impossible\n");
+                if (!estaVazio(&aux))
+                {
+                    printf(" Impossible");    
+                }
                 break;
             }
                 
         }
-
+        
         printf("\n");
         printPilha(&a, "A: ");
         printPilha(&aux, "Aux: ");
