@@ -3,7 +3,7 @@
 
 typedef struct RegItem
 {
-   int valor;
+   char valor;
    struct RegItem *prox;
 } TItem;
 
@@ -14,8 +14,8 @@ typedef struct
 
 void mostrarLista(TLista *, char *);
 void iniciarLista(TLista *);
-void adicionarItem(TLista *, int);
-void removerItem(TLista *, int);
-
+void adicionarItem(TLista *, char);
+int removerItem(TLista *, char);
+int procDima(TLista *);
 
 
