@@ -65,3 +65,7 @@ void printPilha(TPilha* p, char* cabec) {
     p->final = aux;
     printf("\n");
 }
+
+char verTopo(TPilha *pilha) {
+    return pilha->letras[pilha->final-1];
+}

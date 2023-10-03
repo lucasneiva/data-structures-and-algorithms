@@ -15,3 +15,4 @@ int estaVazio(TPilha*);
 void transferir(TPilha*, TPilha*);
 void inverter(TPilha*);
 void printPilha(TPilha*, char*);
+char verTopo(TPilha *);

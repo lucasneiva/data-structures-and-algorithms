@@ -19,69 +19,68 @@ int estaVazio(TPilha*);
 void transferir(TPilha*, TPilha*);
 void inverter(TPilha*);
 void printPilha(TPilha*, char*);
+char verTopo(TPilha *);
 
 int ehOperador(char);
-int getGrauPrio(char op);
+int getPrio(char op);
 int encProxOp(char *expr, int posAtual);
 int proxTemPriori(char *expr, int pos1, int pos2);
 
 int main () {
 
-    int N, cont;
+    int N;
+    char aux;
     char expressao[301];
-    TPilha operadores, parenteses;
+    TPilha pilha;
 
     scanf("%d", &N);
 
+        
     for (int i = 0; i < N; i++)
     {
-        iniciarPilha(&operadores);
-        iniciarPilha(&parenteses);
+        iniciarPilha(&pilha);
 
         scanf("%s", expressao);
 
-        //printf("%d\n", proxTemPriori(expressao, 1, 5));
-        //printf("%d\n", ehOperador(':'));
-
-        cont = 0;
-        //printf("%s -> ", expressao);
         for (int j = 0; j < strlen(expressao) ; j++)
         {
-            if (ehOperador(expressao[j]))
+            
+            
+            if (expressao[j] == '(')
             {
-                cont++;
-                if(proxTemPriori(expressao, j, encProxOp(expressao, j))) {
-                    if (!estaVazio(&operadores) || cont == 1)
-                        printf("%c", expressao[j-1]);
-                    
-                    push(&operadores, expressao[j]);
-                }
-                else {
-                    
-                    if (cont == 1)
-                        printf("%c", expressao[j-1]);
-
-                    if (!estaVazio(&operadores))
-                    {
-                        printf("%c%c%c", expressao[j-1], expressao[j+1], expressao[j]);
-                    }
-                    else {
-                        printf("%c%c", expressao[j+1], expressao[j]);
-                    }
-
-                    while (!estaVazio(&operadores))
-                        printf("%c", pop(&operadores));
+                push(&pilha, expressao[j]);
+            }
+            else if(expressao[j] == ')')
+            {
+                while (1)
+                {
+                    aux = pop(&pilha);
+                    if (aux == '(' || estaVazio(&pilha))
+                        break;
+                    printf("%c", aux);
                 }
             }
-
-            if (expressao[j] == '(')
-                push(&parenteses, '(');
-            
-            if (expressao[j] == ')')
-                pop(&parenteses);
-
+            else if(ehOperador(expressao[j]))
+            {
+                
+                while (!estaVazio(&pilha) && getPrio(verTopo(&pilha)) >= getPrio(expressao[j])) {
+                        printf("%c", pop(&pilha));
+                }
+                push(&pilha, expressao[j]);
+            }
+            else
+            {
+                printf("%c", expressao[j]);
+            }            
             
         }
+        while (!estaVazio(&pilha))
+        {
+            aux = pop(&pilha);
+            if (ehOperador(aux))
+                printf("%c", aux);
+        }
+        
         printf("\n");
     }
     
@@ -97,50 +96,30 @@ int ehOperador(char c) {
     case '/':
     case '^':
         return true;
+        break;
     default:
         return false;
         break;
     }
 }
 
-int encProxOp(char *expr, int posAtual) {
-    for (int i = posAtual+1; i < strlen(expr); i++)
-        if (ehOperador(expr[i]))
-            return i;
-    return -1;
-}
-
-int proxTemPriori(char *expr, int pos1, int pos2) {
-    if (pos2 == -1)
-        return false;
-    
-    for (int i = pos1+1; i < pos2; i++)
-    {
-        if (expr[i] == '(')
-            return true;
-        if (expr[i] == ')')
-            return false;
-    }
-
-    if (getGrauPrio(expr[pos1]) <= getGrauPrio(expr[pos2]))
-        return false;
-    else
-        return true;
-    
-    
-}
-
-int getGrauPrio(char op) {
+int getPrio(char op) {
     switch (op)
     {
+    case '(':
+        return 0;
+        break;
     case '+':
     case '-':
-        return 2;
+        return 1;
+        break;
     case '*':
     case '/':
-        return 1;
+        return 2;
+        break;
     case '^':
-        return 0;
+        return 3;
+        break;
     default:
         return -1;
         break;
@@ -210,4 +189,8 @@ void printPilha(TPilha* p, char* cabec) {
     }
     p->final = aux;
     printf("\n");
+}
+
+char verTopo(TPilha *pilha) {
+    return pilha->letras[pilha->final-1];
 }

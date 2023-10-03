@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include "cabecalho.h"
+#include<stdio.h>
 
 int main() {
 
@@ -7,16 +8,27 @@ int main() {
 
     iniciarLista(&l1);
 
-    for (int i = 0; i < 10; i++)
-        adicionarItem(&l1, i);
-
-    removerItem(&l1, 5);
-    removerItem(&l1, 0);
-    removerItem(&l1, 9);
-
-    adicionarItem(&l1, 10);
     
+    append(&l1, 1);
+    append(&l1, 2);
+    popFront(&l1);
+    popFront(&l1);
+    
+
+    
+
+    append(&l1, 10);
+    prepend(&l1, -1);
+
     mostrarLista(&l1, "Lista 1: ");
+
     
+
+    
+    popFront(&l1);
+    popEnd(&l1);
+
+    mostrarLista(&l1, "Lista 1: ");
+
     return 0;
 }
