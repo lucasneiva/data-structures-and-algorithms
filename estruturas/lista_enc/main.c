@@ -11,22 +11,18 @@ int main() {
     
     append(&l1, 1);
     append(&l1, 2);
-    popFront(&l1);
-    popFront(&l1);
-    
-
-    
-
-    append(&l1, 10);
     prepend(&l1, -1);
+    prepend(&l1, -2);
 
     mostrarLista(&l1, "Lista 1: ");
 
-    
+    printf("%d\n", popEnd(&l1));
+    printf("%d\n", popEnd(&l1));
+    printf("%d\n", popFront(&l1));
+    printf("%d\n", popFront(&l1));
 
-    
-    popFront(&l1);
-    popEnd(&l1);
+    printf("%d\n", popFront(&l1));
+    printf("%d\n", popEnd(&l1));
 
     mostrarLista(&l1, "Lista 1: ");
 

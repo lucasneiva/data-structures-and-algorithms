@@ -1,5 +1,74 @@
-#include "cabecalho.h"
 #include <stdio.h>
+
+#include<stdbool.h>
+#include<stdlib.h>
+
+typedef struct RegItem
+{
+   int valor;
+   struct RegItem *prox;
+} TItem;
+
+typedef struct
+{
+    TItem *inicio, *final;
+    int length;
+} TLista;
+
+void mostrarLista(TLista *, char *);
+void iniciarLista(TLista *);
+void append(TLista *, int);
+void prepend(TLista *, int);
+int popFront(TLista *);
+int popEnd(TLista *);
+void removerItem(TLista *, int);
+
+
+
+
+int main () {
+
+    int N, aux;
+    TLista lista;
+
+    while (1)
+    {
+        scanf("%d", &N);
+
+        if (N == 0) break;
+
+        iniciarLista(&lista);
+        for (int i = 1; i <= N; i++)
+        {
+            append(&lista, i);
+        }
+
+        printf("Discarded cards:");
+
+        if (lista.length > 1)
+        {
+            printf(" %d", popFront(&lista));
+            aux = popFront(&lista);
+            append(&lista, aux);
+        }
+        
+        while (lista.length > 1)
+        {
+            //mostrarLista(&lista, "Lista: ");
+            printf(", %d", popFront(&lista));
+            aux = popFront(&lista);
+            append(&lista, aux);
+
+            
+        }
+
+        printf("\nRemaining card: %d\n", popEnd(&lista));
+        
+
+    }
+    
+    return 0;
+}
 
 void iniciarLista(TLista *lista) {
     lista->inicio = NULL;

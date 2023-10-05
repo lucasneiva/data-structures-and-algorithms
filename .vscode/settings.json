@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "cabecalho.h": "c"
+        "cabecalho.h": "c",
+        "hashtable.h": "c"
     }
 }
