@@ -70,7 +70,7 @@ char searchValue(THashTable *tabela, int key) {
             aux = aux->next;
         }
     }
-return '*';
+    return '*';
 }
 
 void removeItem(THashTable *tabela, int key) {
