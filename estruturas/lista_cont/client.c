@@ -1,77 +1,61 @@
 #include "interface.h"
 #include <stdio.h>
 
+void testListOperations(TList *list) {
+    printf("Testing List Operations:\n");
+
+    // Append some values
+    for (int i = 1; i <= 5; i++) {
+        append(list, i);
+    }
+
+    printf("List Contents after Appending: ");
+    printList(list, "List:");
+
+    // Prepend some values
+    for (int i = 6; i <= 10; i++) {
+        prepend(list, i);
+    }
+
+    printf("List Contents after Prepending: ");
+    printList(list, "List:");
+
+    // Insert a value at a specific index
+    int indexToInsert = 5;
+    int valueToInsert = 42;
+    insert(list, indexToInsert, valueToInsert);
+
+    printf("List Contents after Insertion: ");
+    printList(list, "List:");
+
+    // Remove a specific value
+    int valueToRemove = 5;
+    removeValue(list, valueToRemove);
+
+    printf("List Contents after Removing %d: ", valueToRemove);
+    printList(list, "List:");
+
+    // Pop values from the front
+    while (!isListEmpty(list)) {
+        int frontValue = popFront(list);
+        printf("Popped from Front: %d\n", frontValue);
+    }
+
+    // Check if the list is empty
+    printf("Is the list empty? %s\n", isListEmpty(list) ? "Yes" : "No");
+
+    freeList(list);
+}
+
 int main() {
     TList myList;
-    const size_t max_length = 5;
 
-    if (!initList(&myList, max_length)) {
+    if (!initList(&myList)) {
         printf("Error: Unable to initialize the list.\n");
         return 1;
     }
 
-    printf("Testing List Functions:\n");
-
-    printf("Appending values to the list:\n");
-    for (int i = 1; i <= 5; i++) {
-        if (append(&myList, i)) {
-            printf("Appended: %d\n", i);
-        } else {
-            printf("Error: List is full. Unable to append %d.\n", i);
-        }
-    }
-
-    printf("\nList Contents: ");
-    printList(&myList, "List:");
-
-    printf("\nPrepending values to the list:\n");
-    for (int i = 6; i >= 1; i--) {
-        if (prepend(&myList, i)) {
-            printf("Prepended: %d\n", i);
-        } else {
-            printf("Error: List is full. Unable to prepend %d.\n", i);
-        }
-    }
-
-    printf("\nList Contents: ");
-    printList(&myList, "List:");
-
-    printf("\nPopping values from the front of the list:\n");
-    while (!isListEmpty(&myList)) {
-        int value = popFront(&myList);
-        printf("Popped: %d\n", value);
-    }
-
-    printf("\nList Contents: ");
-    printList(&myList, "List:");
-
-    printf("\nAppending more values to the list:\n");
-    for (int i = 1; i <= 7; i++) {
-        if (append(&myList, i)) {
-            printf("Appended: %d\n", i);
-        } else {
-            printf("Error: List is full. Unable to append %d.\n", i);
-        }
-    }
-
-    printf("\nRemoving a value from the list:\n");
-    int valueToRemove = 3;
-    if (removeValue(&myList, valueToRemove)) {
-        printf("Removed: %d\n", valueToRemove);
-    } else {
-        printf("Error: Value %d not found in the list.\n", valueToRemove);
-    }
-
-    printf("\nList Contents: ");
-    printList(&myList, "List:");
-
-    printf("\nPopping values from the end of the list:\n");
-    while (!isListEmpty(&myList)) {
-        int value = popEnd(&myList);
-        printf("Popped: %d\n", value);
-    }
-
-    freeList(&myList);
+    testListOperations(&myList);
 
     return 0;
 }

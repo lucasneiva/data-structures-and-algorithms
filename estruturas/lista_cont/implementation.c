@@ -1,14 +1,16 @@
 #include "interface.h"
 #include <stdio.h>
 
-int initList(TList *list, size_t max_length) {
-    list->values = (int *) malloc(sizeof(int)*max_length);
+int resizeList(TList *);
+
+int initList(TList *list) {
+    list->max_length = 10;
+    list->values = (int *) malloc(sizeof(int)*list->max_length);
 
     if (list->values == NULL)
         return false;
     
     list->length = 0;
-    list->max_length = max_length;
     
     return true;
 }
@@ -29,8 +31,10 @@ void printList(TList *list, char *header) {
 }
 
 int append(TList *list, int value) {
-    if (isListFull(list))
+    if (isListFull(list) && !resizeList(list)) {
         return false;
+    }
+        
     
     list->values[list->length] = value;
     list->length++;
@@ -39,8 +43,9 @@ int append(TList *list, int value) {
 }
 
 int prepend(TList *list, int value) {
-    if (isListFull(list))
+    if (isListFull(list) && !resizeList(list)) {
         return false;
+    }
 
     if (!isListEmpty(list))
         for (size_t i = list->length; i > 0; i--)
@@ -50,6 +55,22 @@ int prepend(TList *list, int value) {
 
     list->length++;
 
+    return true;
+}
+
+int insert(TList *list, size_t index, int value) {
+    if (isListFull(list) && !resizeList(list)) {
+        return false;
+    }
+
+    if (index >= list->length)
+        return false;
+    
+    for (size_t i = list->length; i > index; i--)
+            list->values[i] = list->values[i-1];
+    
+    list->values[index] = value;
+    list->length++;
     return true;
 }
 
@@ -108,5 +129,28 @@ int isListEmpty(TList *list) {
         return true;
     else
         return false;
+}
+
+int isInList(TList *list, int value) {
+    for (size_t i = 0; i < list->length; i++)
+        if (list->values[i] == value)
+            return true;
+
+    return false;
+}
+
+int resizeList(TList *list) {
+    int *new_block = realloc(list->values, sizeof(int)* list->max_length*2);
+
+    if (new_block != NULL)
+    {
+        list->values = new_block;
+        list->max_length *= 2;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
