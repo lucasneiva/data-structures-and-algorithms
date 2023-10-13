@@ -132,11 +132,7 @@ int popEnd(TLista *lista) {
         
     }
     
-    return valor;
-    
-    
-    
-    
+    return valor;    
 }
 
 
