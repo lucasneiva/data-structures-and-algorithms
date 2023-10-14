@@ -1,22 +1,24 @@
-#include "hashtable.h"
+#include "hash_table.h"
 #include <stdlib.h>
 
+void initHashTable(THashTable *table) {
+    
+}
 
-
-int calcHash(int key) {
+int hash(int key) {
     return key%TABLE_SIZE;
 }
 
-int isItemNull(TItem item) {
+int isItemNull(TNode item) {
     if (item.key == NULL && item.key == NULL)
-        return TRUE; 
+        return true; 
     else
-        return FALSE;
+        return false;
 }
 
-void insertItem(THashTable *hashtable, int key, char value) {
-    int hashcode = calcHash(key);
-    TItem newItem, *aux, *auxItem;
+void insert(THashTable *hashtable, int key, char value) {
+    int hashcode = hash(key);
+    TNode newItem, *aux, *auxItem;
 
     newItem.key = key;
     newItem.value = value;
@@ -28,7 +30,7 @@ void insertItem(THashTable *hashtable, int key, char value) {
     }
     else
     {
-        auxItem = malloc(sizeof(TItem));
+        auxItem = malloc(sizeof(TNode));
         *auxItem = newItem;
         aux = &hashtable->table[hashcode];
         while (aux->next != NULL)
@@ -40,18 +42,11 @@ void insertItem(THashTable *hashtable, int key, char value) {
     
 }
 
-void iniTHashTable(THashTable *tabela) {
-    TItem aux;
-    aux.key = NULL;
-    aux.value = NULL;
-    aux.next = NULL;
-    for (int i = 0; i < TABLE_SIZE; i++)
-        tabela->table[i] = aux;
-}
+
 
 char searchValue(THashTable *tabela, int key) {
-    int hashcode = calcHash(key);
-    TItem *aux;
+    int hashcode = hash(key);
+    TNode *aux;
 
     if (tabela->table[hashcode].next == NULL)
     {
