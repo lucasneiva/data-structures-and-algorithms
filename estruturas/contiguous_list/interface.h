@@ -17,7 +17,6 @@ int insert(TList *, size_t, int);
 int popFront(TList *);
 int popEnd(TList *);
 int removeValue(TList *, int);
-int isListFull(TList *);
 int isListEmpty(TList *);
 int isInList(TList *, int);
 

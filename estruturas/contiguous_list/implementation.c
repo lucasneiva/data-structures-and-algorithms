@@ -1,6 +1,7 @@
 #include "interface.h"
 #include <stdio.h>
 
+int isListFull(TList *);
 int resizeList(TList *);
 
 int initList(TList *list) {
