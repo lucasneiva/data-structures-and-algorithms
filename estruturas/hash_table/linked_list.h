@@ -18,6 +18,7 @@ void initList(TList *list);
 void freeList(TList *);
 void printList(TList *, char *);
 int append(TList *, size_t, char);
+TNode pop(TList *);
 int removeValue(TList *, size_t);
 int isListEmpty(TList *);
 int isInList(TList *, size_t);

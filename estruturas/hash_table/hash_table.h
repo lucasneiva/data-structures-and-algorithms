@@ -6,6 +6,7 @@ typedef struct
 {
     TList *table;
     size_t tableSize, count;
+    float loadFactor;
 } THashTable;
 
 int initHashTable(THashTable *);
@@ -15,8 +16,10 @@ int delete(THashTable *, size_t);
 char lookUp(THashTable *, size_t);
 int update(THashTable *, size_t, char);
 int searchKey(THashTable *, size_t);
-// int resize(THashTable *);
-// int clearTable(THashTable *);
+void printHashTable(THashTable *);
+int resize(THashTable *);
+void clearTable(THashTable *);
+void calcLoadFactor(THashTable *);
 
 
 

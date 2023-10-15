@@ -60,7 +60,7 @@ void printList(TList *list, char *header) {
     printf("%s", header);
     while (aux != NULL)
     {
-        printf(" %d", aux->value);
+        printf(" - {%d, %c}", aux->key, aux->value);
         aux = aux->link;
     }
     printf("\n");
@@ -142,3 +142,32 @@ TNode *retrieve(TList *list, size_t key) {
     
     return NULL;
 }
+
+TNode pop(TList *list) {
+    TNode *aux, tail;
+
+    tail = *list->tail;
+
+    aux = list->head;
+    
+    list->count--;
+    
+    while (aux->link != list->tail && aux->link != NULL)
+    {
+        aux = aux->link;
+    }
+
+    if (list->count == 0)
+    {
+        initList(list);
+    }
+    else {
+        free(aux->link);
+        aux->link = NULL;
+        list->tail = aux;
+    }
+    
+    
+    return tail;    
+}
+    
