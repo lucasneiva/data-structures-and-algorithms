@@ -8,15 +8,15 @@ typedef struct
     size_t tableSize, count;
 } THashTable;
 
-void initHashTable(THashTable *);
-int hash(int);
+int initHashTable(THashTable *);
+size_t hash(THashTable *, size_t);
 int insert(THashTable *, size_t, char);
 int delete(THashTable *, size_t);
 char lookUp(THashTable *, size_t);
 int update(THashTable *, size_t, char);
 int searchKey(THashTable *, size_t);
-int resize(THashTable *);
-int clearTable(THashTable *);
+// int resize(THashTable *);
+// int clearTable(THashTable *);
 
 
 

@@ -1,10 +1,11 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct
+typedef struct node
 {
     size_t key;
     char value;
-    TNode *link;
+    struct node *link;
 } TNode;
 
 typedef struct 
@@ -16,7 +17,8 @@ typedef struct
 void initList(TList *list);
 void freeList(TList *);
 void printList(TList *, char *);
-int append(TList *, int);
-int removeValue(TList *, int);
+int append(TList *, size_t, char);
+int removeValue(TList *, size_t);
 int isListEmpty(TList *);
-int isInList(TList *, int);
+int isInList(TList *, size_t);
+TNode *retrieve(TList *, size_t);

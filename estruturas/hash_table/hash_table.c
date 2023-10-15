@@ -1,72 +1,82 @@
 #include "hash_table.h"
 #include <stdlib.h>
 
-void initHashTable(THashTable *table) {
+int initHashTable(THashTable *hashTable) {
+    hashTable->tableSize = 10;
+
+    hashTable->table = malloc(sizeof(TList)*hashTable->tableSize);
+
+    if (hashTable->table == NULL)
+        return false;
     
+    for (size_t i = 0; i < hashTable->tableSize; i++)
+        initList(&hashTable->table[i]);
+    
+    hashTable->count = 0;
+
+    return true;
 }
 
-int hash(int key) {
-    return key%TABLE_SIZE;
+size_t hash(THashTable *hashTable, size_t key) {
+    return key % hashTable->tableSize;
 }
 
-int isItemNull(TNode item) {
-    if (item.key == NULL && item.key == NULL)
-        return true; 
+int insert(THashTable *hashtable, size_t key, char value) {
+    if (searchKey(hashtable, key))
+        return false;
+
+    size_t hashcode = hash(hashtable, key);
+
+    if (append(&hashtable->table[hashcode], key, value)) {
+        hashtable->count++;
+        return true;
+    }
     else
         return false;
 }
 
-void insert(THashTable *hashtable, int key, char value) {
-    int hashcode = hash(key);
-    TNode newItem, *aux, *auxItem;
 
-    newItem.key = key;
-    newItem.value = value;
-    newItem.next = NULL;
 
-    if (isItemNull(hashtable->table[hashcode]))
-    {
-        hashtable->table[hashcode] = newItem;
-    }
+char lookUp(THashTable *hashTable, size_t key) {
+    size_t hashcode = hash(hashTable, key);
+    TNode *aux;
+    aux = retrieve(&hashTable->table[hashcode], key);
+
+    if (aux == NULL)
+        return '\0';
+    
+    return aux->value;
+}
+
+int delete(THashTable *hashTable, size_t key) {
+    size_t hashcode = hash(hashTable, key);
+    
+    if (removeValue(&hashTable->table[hashcode], key))
+        return true;
     else
+        return false;
+}
+
+int searchKey(THashTable *hashTable, size_t key) {
+    for (size_t i = 0; i < hashTable->tableSize; i++)
     {
-        auxItem = malloc(sizeof(TNode));
-        *auxItem = newItem;
-        aux = &hashtable->table[hashcode];
-        while (aux->next != NULL)
-        {
-           aux = aux->next;
-        }
-        aux->next = auxItem;
+        if (isInList(&hashTable->table[i], key))
+            return true;
     }
     
+    return false;
 }
 
-
-
-char searchValue(THashTable *tabela, int key) {
-    int hashcode = hash(key);
+int update(THashTable *hashTable, size_t key, char value) {
+    size_t hashcode = hash(hashTable, key);
     TNode *aux;
+    aux = retrieve(&hashTable->table[hashcode], key);
 
-    if (tabela->table[hashcode].next == NULL)
-    {
-        return tabela->table[hashcode].value;
-    }
-    else
-    {
-        aux = &tabela->table[hashcode];
-        while (aux != NULL)
-        {
-            if (aux->key == key)
-            {
-                return aux->value;
-            }
-            
-            aux = aux->next;
-        }
-    }
-    return '*';
+    if (aux == NULL)
+        return false;
+    
+    aux->value = value;
+    return true;
 }
 
-void removeItem(THashTable *tabela, int key) {
-}
+    

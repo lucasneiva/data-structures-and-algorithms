@@ -1,68 +1,144 @@
 #include "linked_list.h"
+#include <stdio.h>
 
-void iniciarLista(TList *lista) {
-    lista->head = NULL;
-    lista->tail = NULL;
-    lista->count = 0;
+void initList(TList *list) {
+    list->head = NULL;
+    list->tail = NULL;
+    list->count = 0;
 }
 
-void append(TList *lista, int valor) {
-    TNode *aux;
-    aux = malloc(sizeof(TNode));
-    lista->count++;
-    aux->value = valor;
+void freeList(TList *list) {
+    TNode *aux, *ant;
 
+    aux = list->head;
+
+    while (aux != NULL)
+    {
+        ant = aux;
+        aux = aux->link;
+        free(ant);
+    }
+    
+    list->head = NULL;
+    list->tail = NULL;
+    list->count = 0;
+}
+
+int append(TList *list, size_t key, char value) {
+    TNode *aux;
+
+    aux = malloc(sizeof(TNode));
+
+    if (aux == NULL)
+        return false;
+    
+    aux->value = value;
+    aux->key = key;
     aux->link = NULL;
     
 
-    if (lista->head == NULL)
+    if (isListEmpty(list))
     {
-        lista->head = aux;
+        list->head = aux;
     }
     else
     {
-        lista->tail->link = aux;
+        list->tail->link = aux;
     }
         
-    lista->tail = aux;
+    list->tail = aux;
+
+    list->count++;
+    return true;
 }
 
-void mostrarLista(TList *lista, char *cabec) {
+void printList(TList *list, char *header) {
     TNode *aux;
-    aux = lista->head;
-    printf("%s", cabec);
-    value (aux != NULL)
+
+    aux = list->head;
+
+    printf("%s", header);
+    while (aux != NULL)
     {
-        printf("%d ", aux->valor);
+        printf(" %d", aux->value);
         aux = aux->link;
     }
     printf("\n");
 }
 
-void removerItem(TList *lista, int valor) {
+int removeValue(TList *list, size_t key) {
     TNode *aux, *ant;
 
-    aux = lista->head;
-    ant value NULL;
+    aux = list->head;
+    ant = NULL;
 
     while (aux != NULL)
     {
-        if (aux->valor == valor) {
+        if (aux->key == key) {
             if (ant == NULL)
             {
-                lista->head = aux->link;
+                list->head = aux->link;
+                list->tail = aux->link;
             }                
             else if (aux->link == NULL)
             {
-                lista->tail = ant;
+                list->tail = ant;
             }
             else
             {
                 ant->link = aux->link;
             }
+
+            free(aux);
+            list->count--;
+
+            
+            
+            return true;
         }
 
         ant = aux;
         aux = aux->link;
     }
+
+    return false;
+}
+
+int isListEmpty(TList * list) {
+    if (list->count == 0)
+        return true;
+    else
+        return false;
+}
+
+int isInList(TList *list, size_t key) {
+    TNode *aux;
+
+    aux = list->head;
+
+    while (aux != NULL)
+    {
+        if (aux->key == key)
+            return true;
+
+        aux = aux->link;
+    }
+    
+    return false;
+}
+
+TNode *retrieve(TList *list, size_t key) {
+    TNode *aux;
+
+    aux = list->head;
+
+    while (aux != NULL)
+    {
+        if (aux->key == key)
+            return aux;
+
+        aux = aux->link;
+    }
+    
+    return NULL;
 }
