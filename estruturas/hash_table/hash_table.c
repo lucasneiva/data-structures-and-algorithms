@@ -109,26 +109,26 @@ void calcLoadFactor(THashTable *hashTable) {
 }
 
 int resize(THashTable *hashTable) {
-    size_t new_size = hashTable->tableSize*2;
-    TList *newTable = (TList *) malloc(sizeof(TList)*new_size);
+    size_t newSize = hashTable->tableSize*2;
+    TList *newTable = (TList *) malloc(sizeof(TList)*newSize);
     TNode node;
 
     if (newTable == NULL)
         return false;
 
-    for (size_t i = 0; i < new_size; i++)
+    for (size_t i = 0; i < newSize; i++)
         initList(&newTable[i]);
 
     for  (size_t i = 0; i < hashTable->tableSize; i++) {
         while (!isListEmpty(&hashTable->table[i]))
         {
             node = pop(&hashTable->table[i]);
-            append(&newTable[node.key%new_size], node.key, node.value); 
+            append(&newTable[node.key%newSize], node.key, node.value); 
         }
     }
 
     free(hashTable->table);
     hashTable->table = newTable;
-    hashTable->tableSize = new_size;
+    hashTable->tableSize = newSize;
     return true;
 }
