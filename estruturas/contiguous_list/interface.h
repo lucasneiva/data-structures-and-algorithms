@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define INITIAL_LENGTH 10
+#define GROWTH_FACTOR 2
+
 typedef struct list
 {
     int *values;

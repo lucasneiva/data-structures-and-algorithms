@@ -5,7 +5,7 @@ int isListFull(TList *);
 int resizeList(TList *);
 
 int initList(TList *list) {
-    list->max_length = 10;
+    list->max_length = INITIAL_LENGTH;
     list->values = (int *) malloc(sizeof(int)*list->max_length);
 
     if (list->values == NULL)
@@ -146,7 +146,7 @@ int resizeList(TList *list) {
     if (new_block != NULL)
     {
         list->values = new_block;
-        list->max_length *= 2;
+        list->max_length *= GROWTH_FACTOR;
         return true;
     }
     else
