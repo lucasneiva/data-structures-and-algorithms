@@ -24,7 +24,7 @@ void freeList(TList *list) {
     list->count = 0;
 }
 
-int append(TList *list, size_t key, char value) {
+int append(TList *list, int key, char value) {
     TNode *aux;
 
     aux = malloc(sizeof(TNode));
@@ -66,7 +66,7 @@ void printList(TList *list, char *header) {
     printf("\n");
 }
 
-int removeValue(TList *list, size_t key) {
+int removeValue(TList *list, int key) {
     TNode *aux, *ant;
 
     aux = list->head;
@@ -111,7 +111,7 @@ int isListEmpty(TList * list) {
         return false;
 }
 
-int isInList(TList *list, size_t key) {
+int isInList(TList *list, int key) {
     TNode *aux;
 
     aux = list->head;
@@ -127,7 +127,7 @@ int isInList(TList *list, size_t key) {
     return false;
 }
 
-TNode *retrieve(TList *list, size_t key) {
+TNode *retrieve(TList *list, int key) {
     TNode *aux;
 
     aux = list->head;

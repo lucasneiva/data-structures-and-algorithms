@@ -3,49 +3,50 @@
 #include <stdio.h>
 
 int initHashTable(THashTable *hashTable) {
-    hashTable->tableSize = 10;
-
-    hashTable->table = malloc(sizeof(TList)*hashTable->tableSize);
+    hashTable->table = malloc(sizeof(TList) * INITIAL_SIZE);
 
     if (hashTable->table == NULL)
-        return false;
-    
-    for (size_t i = 0; i < hashTable->tableSize; i++)
-        initList(&hashTable->table[i]);
+        return 0;
     
     hashTable->count = 0;
-
-    return true;
+    hashTable->loadFactor = 0;
+    hashTable->size = INITIAL_SIZE;
+    
+    for (size_t i = 0; i < hashTable->size; i++)
+        initList(&hashTable->table[i]);
+    
+    return 1;
 }
 
-size_t hash(THashTable *hashTable, size_t key) {
-    return key % hashTable->tableSize;
+size_t hash(THashTable *hashTable, int key) {
+    return key % hashTable->size;
 }
 
-int insert(THashTable *hashtable, size_t key, char value) {
+int insert(THashTable *hashtable, int key, char value) {
     if (searchKey(hashtable, key))
-        return false;
+        return 0;
+
+    updateLoadFactor(hashtable);
+
+    if (hashtable->loadFactor >= LOAD_FACTOR_THRESHOLD)
+        resize(hashtable);
 
     size_t hashcode = hash(hashtable, key);
-
-    calcLoadFactor(hashtable);
-
-    if (hashtable->loadFactor >= 0.75)
-        resize(hashtable);
     
-    if (append(&hashtable->table[hashcode], key, value)) {
-        hashtable->count++;
-        return true;
-    }
-    else
-        return false;
+    if (append(&hashtable->table[hashcode], key, value) == 0)
+        return 0;
+    
+    hashtable->count++;
+    return 1;
 }
 
 
 
-char lookUp(THashTable *hashTable, size_t key) {
-    size_t hashcode = hash(hashTable, key);
+char lookUp(THashTable *hashTable, int key) {
     TNode *aux;
+
+    size_t hashcode = hash(hashTable, key);
+    
     aux = retrieve(&hashTable->table[hashcode], key);
 
     if (aux == NULL)
@@ -54,81 +55,85 @@ char lookUp(THashTable *hashTable, size_t key) {
     return aux->value;
 }
 
-int delete(THashTable *hashTable, size_t key) {
+int delete(THashTable *hashTable, int key) {
     size_t hashcode = hash(hashTable, key);
     
-    if (removeValue(&hashTable->table[hashcode], key)){
-        hashTable->count--;
-        return true;
-    }
+    if (removeValue(&hashTable->table[hashcode], key) == 0)
+        return 0;
         
-    else
-        return false;
+    hashTable->count--;
+    return 1;
 }
 
-int searchKey(THashTable *hashTable, size_t key) {
-    for (size_t i = 0; i < hashTable->tableSize; i++)
-    {
-        if (isInList(&hashTable->table[i], key))
-            return true;
-    }
-    
-    return false;
-}
-
-int update(THashTable *hashTable, size_t key, char value) {
+int searchKey(THashTable *hashTable, int key) {
     size_t hashcode = hash(hashTable, key);
-    TNode *aux;
-    aux = retrieve(&hashTable->table[hashcode], key);
 
-    if (aux == NULL)
+    if (isInList(&hashTable->table[hashcode], key) == 0)
         return false;
     
-    aux->value = value;
     return true;
 }
 
+int update(THashTable *hashTable, int key, char value) {
+    TNode *aux;
+
+    size_t hashcode = hash(hashTable, key);
+    
+    aux = retrieve(&hashTable->table[hashcode], key);
+
+    if (aux == NULL)
+        return 0;
+    
+    aux->value = value;
+    return 1;
+}
+
 void printHashTable(THashTable *hashTable) {
-    char header[5];
-    for (size_t i = 0; i < hashTable->tableSize; i++)
+    printf("\n\nSize: %d | Count: %d | Load Factor: %f\n\n", hashTable->size, hashTable->count, hashTable->loadFactor);
+    for (size_t i = 0; i < hashTable->size; i++)
     {
+        char header[6];
         sprintf(header, "[%d]", i);
         printList(&hashTable->table[i], header);
     }
 }
 
 void clearTable(THashTable *hashTable) {
-    for (size_t i = 0; i < hashTable->tableSize; i++)
-    {
+    for (size_t i = 0; i < hashTable->size; i++)
         freeList(&hashTable->table[i]);
-    }
+    
 }
 
-void calcLoadFactor(THashTable *hashTable) {
-    hashTable->loadFactor = (float) hashTable->count / hashTable->tableSize;
+void updateLoadFactor(THashTable *hashTable) {
+    hashTable->loadFactor = (float) hashTable->count / hashTable->size;
 }
 
 int resize(THashTable *hashTable) {
-    size_t newSize = hashTable->tableSize*2;
-    TList *newTable = (TList *) malloc(sizeof(TList)*newSize);
     TNode node;
 
+    size_t newSize, hashcode;
+
+    newSize = hashTable->size*2;
+
+    TList *newTable = (TList *) malloc(sizeof(TList) * newSize);
+    
     if (newTable == NULL)
-        return false;
+        return 0;
 
     for (size_t i = 0; i < newSize; i++)
         initList(&newTable[i]);
 
-    for  (size_t i = 0; i < hashTable->tableSize; i++) {
-        while (!isListEmpty(&hashTable->table[i]))
+    for  (size_t i = 0; i < hashTable->size; i++) {
+        while (isListEmpty(&hashTable->table[i]) == 0)
         {
             node = pop(&hashTable->table[i]);
-            append(&newTable[node.key%newSize], node.key, node.value); 
+            hashcode = node.key%newSize;
+            append(&newTable[hashcode], node.key, node.value); 
         }
     }
 
     free(hashTable->table);
     hashTable->table = newTable;
-    hashTable->tableSize = newSize;
-    return true;
+    hashTable->size = newSize;
+    return 1;
 }

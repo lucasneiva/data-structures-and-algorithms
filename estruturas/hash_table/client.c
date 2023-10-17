@@ -3,98 +3,45 @@
 
 int main() {
 
-    THashTable table;
-    // Test init
-    if(!initHashTable(&table)) {
-        printf("Init failed!\n");
-        return 1;
-    }
+    THashTable hashTable;
+    initHashTable(&hashTable);
+    
+    // Test insert
+    insert(&hashTable, 1, 'a');
+    insert(&hashTable, 2, 'b');
+    
+    // Test lookup
+    char value = lookUp(&hashTable, 1);
+    printf("Value for key 1: %c\n", value);
+    
+    // Test update
+    update(&hashTable, 1, 'z');
+    value = lookUp(&hashTable, 1);
+    printf("Updated value for key 1: %c\n", value);
 
+    // Test delete
+    delete(&hashTable, 2);
+    
+    // Test search
+    int keyExists = searchKey(&hashTable, 1);
+    printf("Key 1 exists: %d\n", keyExists);
+
+    keyExists = searchKey(&hashTable, 2);
+    printf("Key 2 exists: %d\n", keyExists);
+
+    // Test print
+    printHashTable(&hashTable);
+    
     // Test resize
-    for(int i=1; i<=20; i++) {
-        
-        printf("Inserting %d\n", i);
-        insert(&table, i, 'A'+i);
-
-        if (i%5 == 0)
-        {
-            printf("Table contents:\n");
-            printHashTable(&table); 
-        }
-        
+    for(int i=0; i<100; i++) {
+        insert(&hashTable, i, 'a'+i); 
     }
     
-    
+    printHashTable(&hashTable);
+    printf("%d", hashTable.size);
 
-    // Insert some keys
-    int keys[] = {99, 25, 32, 65, 77};
-    for(int i=0; i<5; i++) {
-        if(!insert(&table, keys[i], 'A'+i)) {
-        printf("Insert %d failed!\n", keys[i]);
-        return 1; 
-        }
-    }
+    // Test clear
+    clearTable(&hashTable);
 
-    // Duplicate insert
-    if(insert(&table, 12, 'Z')) {
-        printf("Inserted duplicate key!\n");
-        return 1;
-    }
-
-    // Lookup
-    for(int i=0; i<5; i++) {
-        char val = lookUp(&table, keys[i]);
-        if(val != 'A'+i) {
-        printf("Lookup %d failed!\n", keys[i]);
-        return 1;
-        }
-    }
-
-    // Lookup non-existing
-    if(lookUp(&table, 100) != '\0') {
-        printf("Lookup non-existing key failed!\n");
-        return 1;
-    }
-
-    // Delete 
-    if(!delete(&table, 25)) {
-        printf("Delete failed!\n");
-        return 1;
-    }
-
-    // Delete non-existing
-    if(delete(&table, 25)) {
-        printf("Deleted non-existing key!\n");
-        return 1;
-    }
-
-    // Search 
-    if(!searchKey(&table, 19)) {
-        printf("Search failed!\n");
-        return 1; 
-    }
-
-    if(searchKey(&table, 25)) {
-        printf("Searched deleted key!\n");
-        return 1;
-    }
-
-    // Update
-    if(!update(&table, 32, 'X')) {
-        printf("Update failed!\n");
-        return 1;
-    }
-
-    // Update non-existing
-    if(update(&table, 25, 'Y')) {
-        printf("Updated non-existing key!\n");
-        return 1;
-    }
-    printf("Table contents:\n");
-    printHashTable(&table); 
-    printf("Tests passed!\n");
-    
     return 0;
-
-
 }

@@ -3,7 +3,7 @@
 
 typedef struct node
 {
-    size_t key;
+    int key;
     char value;
     struct node *link;
 } TNode;
@@ -17,9 +17,9 @@ typedef struct
 void initList(TList *list);
 void freeList(TList *);
 void printList(TList *, char *);
-int append(TList *, size_t, char);
+int append(TList *, int, char);
 TNode pop(TList *);
-int removeValue(TList *, size_t);
+int removeValue(TList *, int);
 int isListEmpty(TList *);
-int isInList(TList *, size_t);
-TNode *retrieve(TList *, size_t);
+int isInList(TList *, int);
+TNode *retrieve(TList *, int);
