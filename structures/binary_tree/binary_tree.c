@@ -1,6 +1,13 @@
 #include "binary_tree.h"
 #include <stdio.h>
 
+int isRightChild(TTreeNode *node) {
+    if (node->parent->right == node)
+        return true;
+    else
+        return false;
+}
+
 void initBinaryTree(TBinaryTree *tree) {
     tree->count = 0;
     tree->root = NULL;
@@ -56,19 +63,38 @@ int deleteNode(TBinaryTree *tree, int value) {
 
 
     toDelete = search(tree, value);
+
+    if(toDelete == NULL)
+        return false;
+    
     parent = toDelete->parent;
 
     if (toDelete->left == NULL && toDelete->right == NULL)
     {
-        if (parent->left == toDelete)
-            parent->left = NULL;
-        else
+        if (isRightChild(toDelete))
             parent->right = NULL;
+        else
+            parent->left = NULL;
 
     }
     else if(toDelete->left != NULL && toDelete->right != NULL)
     {
+        aux = toDelete->left;
 
+        while (aux->right != NULL)
+            aux = aux->right;
+
+        if (aux != toDelete)
+            aux->parent->right = NULL;
+        else
+            aux->parent->left = NULL;
+
+        if (isRightChild(toDelete))
+            parent->right = aux;
+        else
+            parent->left = aux;
+        
+        aux->parent = parent;
     }
     else
     {
