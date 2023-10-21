@@ -18,3 +18,6 @@ void preOrderTraversal(TBinaryTree *);
 void inOrderTraversal(TBinaryTree *);
 void postOrderTraversal(TBinaryTree *);
 void freeBinaryTree(TBinaryTree *);
+int findHeight(TBinaryTree *);
+int findLevel(TBinaryTree *, int);
+int findSize(TBinaryTree *);

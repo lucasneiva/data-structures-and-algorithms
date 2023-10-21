@@ -15,15 +15,20 @@ int main() {
   insertNode(&root, 1);
 
   // Delete Node
-  deleteNode(root, 8);
-  deleteNode(root, 20);
-  deleteNode(root, 12);
+  // deleteNode(root, 8);
+  // deleteNode(root, 20);
+  // deleteNode(root, 12);
 
+  // Find size
+  printf("\nSize: %d", findSize(root));
+
+  // Find height
+  printf("\nHeight: %d", findHeight(root));
   // Traverse tree
   printf("\nPreorder traversal: ");
   preOrderTraversal(root);
 
-  printf("Inorder traversal: ");
+  printf("\nInorder traversal: ");
   inOrderTraversal(root);
   
   printf("\nPostorder traversal: ");

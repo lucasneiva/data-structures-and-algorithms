@@ -1,5 +1,6 @@
 #include "binary_tree.h"
 #include <stdio.h>
+#include <math.h>
 
 
 int isRightChild(TBinaryTree *parent, TBinaryTree* child)
@@ -149,14 +150,16 @@ TBinaryTree* searchParent(TBinaryTree *tree, TBinaryTree *child)
         return searchParent(tree->right, child);
 }
 
-TBinaryTree* searchMax(TBinaryTree *tree) {
+TBinaryTree* searchMax(TBinaryTree *tree)
+{
     if (tree->right == NULL)
         return tree;
     else
         return searchMax(tree->right);
 }
 
-void preOrderTraversal(TBinaryTree *tree) {
+void preOrderTraversal(TBinaryTree *tree)
+{
     if (tree == NULL)
         return;
     
@@ -167,7 +170,8 @@ void preOrderTraversal(TBinaryTree *tree) {
     preOrderTraversal(tree->right);
 }
 
-void inOrderTraversal(TBinaryTree *tree) {
+void inOrderTraversal(TBinaryTree *tree)
+{
     if (tree == NULL)
         return;
     
@@ -178,7 +182,8 @@ void inOrderTraversal(TBinaryTree *tree) {
     inOrderTraversal(tree->right);
 }
 
-void postOrderTraversal(TBinaryTree *tree) {
+void postOrderTraversal(TBinaryTree *tree) 
+{
     if (tree == NULL)
         return;
     
@@ -189,7 +194,8 @@ void postOrderTraversal(TBinaryTree *tree) {
     printf("%d ", tree->data);
 }
 
-void freeBinaryTree(TBinaryTree *tree) {
+void freeBinaryTree(TBinaryTree *tree)
+{
     if (tree == NULL)
         return;
     
@@ -198,4 +204,32 @@ void freeBinaryTree(TBinaryTree *tree) {
     freeBinaryTree(tree->right);
 
     free(tree);
+}
+
+int findSize(TBinaryTree *tree)
+{
+    if(tree == NULL)
+        return 0;
+
+    if (isLeaf(tree))
+        return 1;
+    
+    return 1 + findSize(tree->left) + findSize(tree->right);
+}
+
+int findHeight(TBinaryTree *root)
+{
+    if (root == NULL)
+        return 0;
+    
+    if (isLeaf(root))
+        return 1;
+    
+    int leftHeight = findHeight(root->left);
+    int rightHeight = findHeight(root->right);
+
+    if (leftHeight > rightHeight)
+        return rightHeight + 1;
+    else
+        return leftHeight + 1;
 }
