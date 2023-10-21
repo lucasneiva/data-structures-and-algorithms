@@ -2,42 +2,44 @@
 #include "binary_tree.h"
 
 int main() {
-  TBinaryTree tree;
+  TBinaryTree *root = NULL;
 
-  initBinaryTree(&tree);
+  // Insert nodes
+  insertNode(&root, 15);
+  insertNode(&root, 10); 
+  insertNode(&root, 20);
+  insertNode(&root, 8);
+  insertNode(&root, 12);
+  insertNode(&root, 17);
+  insertNode(&root, 25);
+  insertNode(&root, 1);
 
-  insertNode(&tree, 4);
-  insertNode(&tree, 6); 
-  insertNode(&tree, 0);
-  insertNode(&tree, 9);
-  insertNode(&tree, 8);
-  insertNode(&tree, 7);
-  insertNode(&tree, 5);
-  insertNode(&tree, 2);
-  insertNode(&tree, 3);
-  insertNode(&tree, 1);   
+  // Delete Node
+  deleteNode(root, 8);
+  deleteNode(root, 20);
+  deleteNode(root, 12);
 
+  // Traverse tree
+  printf("\nPreorder traversal: ");
+  preOrderTraversal(root);
+
+  printf("Inorder traversal: ");
+  inOrderTraversal(root);
+  
+  printf("\nPostorder traversal: ");
+  postOrderTraversal(root);
+  
   // Search for a node
-  TTreeNode* node = search(&tree, 8);
-  if (node != NULL) {
-    printf("Found node with value %d\n", node->data);
+  int value = 10;
+  TBinaryTree* node = search(root, value);
+  if(node != NULL) {
+    printf("\nFound node with key %d", value);  
   } else {
-    printf("Node not found\n"); 
+    printf("\nNode not found");
   }
 
-  // Delete a node
-  deleteNode(&tree, 0);
-
-  // Traversals
-  printf("In order traversal: ");
-  inOrderTraversal(tree.root);
-  printf("\n");
-
-  printf("Post order traversal: ");
-  postOrderTraversal(tree.root);
-  printf("\n");  
-
-  freeBinaryTree(tree.root);
-
+  // Delete tree  
+  freeBinaryTree(root);
+  
   return 0;
 }

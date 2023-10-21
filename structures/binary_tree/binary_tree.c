@@ -1,183 +1,201 @@
 #include "binary_tree.h"
 #include <stdio.h>
 
-int isRightChild(TTreeNode *node) {
-    if (node->parent->right == node)
+
+int isRightChild(TBinaryTree *parent, TBinaryTree* child)
+{
+    if (parent->right == child)
         return true;
     else
         return false;
 }
 
-void initBinaryTree(TBinaryTree *tree) {
-    tree->count = 0;
-    tree->root = NULL;
-}
-
-
-int insertNode(TBinaryTree *tree, int data) {
-    TTreeNode *newNode, *aux;
-    newNode = malloc(sizeof(TTreeNode));
-
-    if (newNode == NULL)
-        return false;
-
-    newNode->data = data;
-    newNode->left = NULL;
-    newNode->right = NULL;
-
-    if (tree->root == NULL)
-    {
-        tree->root = newNode;
+int isLeaf(TBinaryTree *node)
+{
+    if (node->left == NULL && node->right == NULL)
         return true;
-    }
-    
-    aux = tree->root;  
-
-    while (true) {
-        if (newNode->data > aux->data) {
-            if (aux->right == NULL) {
-                aux->right = newNode;
-                newNode->parent = aux;
-                break;
-            }
-            else
-                aux = aux->right;
-            
-        }
-        else {
-            if (aux->left == NULL) {
-                aux->left = newNode;
-                newNode->parent = aux;
-                break;
-            }
-            else
-                aux = aux->left;
-        }
-    }
-
-    return true;
+    else
+        return false;
 }
 
-int deleteNode(TBinaryTree *tree, int value) {
-    TTreeNode *toDelete, *parent, *aux;
+void removeLink(TBinaryTree *parent, TBinaryTree *child)
+{
+    if (isRightChild(parent, child))
+        parent->right = NULL;
+    else
+        parent->left = NULL;    
+}
 
-
-    toDelete = search(tree, value);
-
-    if(toDelete == NULL)
+int hasBothChildren(TBinaryTree *node) {
+    if (node->left != NULL && node->right != NULL)
+        return true;
+    else
         return false;
+    
+}
 
-    parent = toDelete->parent;
+void initBinaryTree(TBinaryTree *tree, int data) 
+{
+    tree->left = NULL;
+    tree->right = NULL;
+    tree->data = data;
+}
 
-    if (toDelete->left == NULL && toDelete->right == NULL)
+
+int insertNode(TBinaryTree **tree, int data) 
+{
+    if (*tree == NULL)
     {
-        if (isRightChild(toDelete))
-            parent->right = NULL;
-        else
-            parent->left = NULL;
+        *tree = (TBinaryTree *) malloc(sizeof(TBinaryTree));
 
+        if (*tree == NULL)
+            return false;
+        
+        (*tree)->left = NULL;
+        (*tree)->right = NULL;
+        (*tree)->data = data;
+
+        return true;    
     }
-    else if(toDelete->left != NULL && toDelete->right != NULL)
+
+    if (data <= (*tree)->data)
+        return insertNode(&(*tree)->left, data);
+    else
+        return insertNode(&(*tree)->right, data);    
+}
+
+int deleteNode(TBinaryTree *tree, int value) 
+{
+    TBinaryTree *deleteNode, *deleteNodeParent, *maxNodeParent, *maxNode, *deleteNodeChild;
+
+    deleteNode = search(tree, value);
+    deleteNodeParent = searchParent(tree, deleteNode);
+ 
+    if (deleteNode == NULL)
+        return false;
+     
+    if (isLeaf(deleteNode))
     {
-        aux = toDelete->left;
-
-        while (aux->right != NULL)
-            aux = aux->right;
-
-        if (aux != toDelete)
-            aux->parent->right = NULL;
+        if (isRightChild(deleteNodeParent, deleteNode))
+            deleteNodeParent->right = NULL;
         else
-            aux->parent->left = NULL;
+            deleteNodeParent->left = NULL;
 
-        if (isRightChild(toDelete))
-            parent->right = aux;
+        free(deleteNode);
+    }
+    else if (hasBothChildren(deleteNode))
+    {
+        maxNode = searchMax(deleteNode);
+        maxNodeParent = searchParent(tree, maxNode);
+
+        maxNode->left = deleteNode->left;
+        removeLink(maxNodeParent, maxNode);
+
+        free(deleteNode);
+        
+        if (isRightChild(deleteNodeParent, deleteNode))
+            deleteNodeParent->right = maxNode;
         else
-            parent->left = aux;
-
-        aux->parent = parent;
+            deleteNodeParent->left = maxNode;
     }
     else
     {
-        if (toDelete->left != NULL)
-        {
-            if (parent->left == toDelete)
-                parent->left = toDelete->left;
-            else
-                parent->right = toDelete->right;
-                     
-        }
+        if (deleteNode->right != NULL)
+            deleteNodeChild = deleteNode->right;
         else
-        {
-            if (parent->right == toDelete)
-                parent->right = toDelete->right;
-            else
-                parent->left = toDelete->left;
-                
-        }
-    }
-    
-    free(toDelete);
-}
-
-TTreeNode* search(TBinaryTree *tree, int value) {
-    TTreeNode *aux;
-
-    aux = tree->root;
-
-    while (aux != NULL)
-    {
-        if (aux->data == value)
-            return aux;
+            deleteNodeChild = deleteNode->left;
+        
+        if (isRightChild(deleteNodeParent, deleteNode))
+            deleteNodeParent->right = deleteNodeChild;
         else
-            if (value > aux->data)
-                aux = aux->right;
-            else
-                aux = aux->left;
+            deleteNodeParent->left = deleteNodeChild;
+        
+        free(deleteNode);
     }
+        
     
-    return NULL;
+    return 0;
 }
 
-void preOrderTraversal(TTreeNode *root) {
-    if (root == NULL)
-        return;
+
+TBinaryTree* search(TBinaryTree *tree, int value)
+{
+    if (tree == NULL)
+        return NULL;
     
-    printf("%d ", root->data);
-
-    preOrderTraversal(root->left);
-
-    preOrderTraversal(root->right);
+    if (tree->data == value)
+        return tree;
+    
+    if (value <= tree->data)
+        return search(tree->left, value);
+    else
+        return search(tree->right, value);    
 }
 
-void inOrderTraversal(TTreeNode *root) {
-    if (root == NULL)
-        return;
+TBinaryTree* searchParent(TBinaryTree *tree, TBinaryTree *child)
+{
+    if (tree == NULL)
+        return NULL;
     
-    inOrderTraversal(root->left);
+    if (tree->left == child)
+        return tree;
 
-    printf("%d ", root->data);
+    if(tree->right == child)
+        return tree;
 
-    inOrderTraversal(root->right);
+    if (child->data <= tree->data)
+        return searchParent(tree->left, child);
+    else
+        return searchParent(tree->right, child);
 }
 
-void postOrderTraversal(TTreeNode *root) {
-    if (root == NULL)
-        return;
-    
-    postOrderTraversal(root->left);
-
-    postOrderTraversal(root->right);
-
-    printf("%d ", root->data);
+TBinaryTree* searchMax(TBinaryTree *tree) {
+    if (tree->right == NULL)
+        return tree;
+    else
+        return searchMax(tree->right);
 }
 
-void freeBinaryTree(TTreeNode *root) {
-    if (root == NULL)
+void preOrderTraversal(TBinaryTree *tree) {
+    if (tree == NULL)
         return;
     
-    freeBinaryTree(root->left);
+    printf("%d ", tree->data);
 
-    freeBinaryTree(root->right);
+    preOrderTraversal(tree->left);
 
-    free(root);
+    preOrderTraversal(tree->right);
+}
+
+void inOrderTraversal(TBinaryTree *tree) {
+    if (tree == NULL)
+        return;
+    
+    inOrderTraversal(tree->left);
+
+    printf("%d ", tree->data);
+
+    inOrderTraversal(tree->right);
+}
+
+void postOrderTraversal(TBinaryTree *tree) {
+    if (tree == NULL)
+        return;
+    
+    postOrderTraversal(tree->left);
+
+    postOrderTraversal(tree->right);
+
+    printf("%d ", tree->data);
+}
+
+void freeBinaryTree(TBinaryTree *tree) {
+    if (tree == NULL)
+        return;
+    
+    freeBinaryTree(tree->left);
+
+    freeBinaryTree(tree->right);
+
+    free(tree);
 }
