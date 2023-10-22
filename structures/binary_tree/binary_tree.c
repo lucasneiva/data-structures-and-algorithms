@@ -211,9 +211,6 @@ int findSize(TBinaryTree *tree)
     if(tree == NULL)
         return 0;
 
-    if (isLeaf(tree))
-        return 1;
-    
     return 1 + findSize(tree->left) + findSize(tree->right);
 }
 
@@ -222,14 +219,22 @@ int findHeight(TBinaryTree *root)
     if (root == NULL)
         return 0;
     
-    if (isLeaf(root))
-        return 1;
-    
     int leftHeight = findHeight(root->left);
     int rightHeight = findHeight(root->right);
 
     if (leftHeight > rightHeight)
-        return rightHeight + 1;
-    else
         return leftHeight + 1;
+    else
+        return rightHeight + 1;
+}
+
+int findLevel(TBinaryTree *root, int value)
+{
+    if (root == NULL || root->data == value)
+        return 0;
+    
+    if (value <= root->data)
+        return 1 + findLevel(root->left, value);
+    else
+        return 1 + findLevel(root->right, value);
 }

@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include "binary_tree.h"
 
-int main() {
+int main()
+{
   TBinaryTree *root = NULL;
-
+  
   // Insert nodes
   insertNode(&root, 15);
   insertNode(&root, 10); 
@@ -24,27 +25,33 @@ int main() {
 
   // Find height
   printf("\nHeight: %d", findHeight(root));
+
+  
+  // Find level
+  int data = 1;
+  printf("\nLevel of %d: %d", data, findLevel(root, data));
+
   // Traverse tree
   printf("\nPreorder traversal: ");
   preOrderTraversal(root);
 
   printf("\nInorder traversal: ");
   inOrderTraversal(root);
-  
+
   printf("\nPostorder traversal: ");
   postOrderTraversal(root);
-  
+
   // Search for a node
   int value = 10;
   TBinaryTree* node = search(root, value);
   if(node != NULL) {
-    printf("\nFound node with key %d", value);  
+  printf("\nFound node with key %d", value);  
   } else {
-    printf("\nNode not found");
+  printf("\nNode not found");
   }
 
   // Delete tree  
   freeBinaryTree(root);
-  
+
   return 0;
 }
