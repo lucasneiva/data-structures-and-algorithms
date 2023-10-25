@@ -19,6 +19,18 @@ int isLeaf(TBinaryTree *node)
         return false;
 }
 
+void printBinaryTree(TBinaryTree *root, int n)
+{
+    if (root == NULL) return;
+    
+    for (size_t i = 0; i < n; i++) printf("\t");
+    
+    printf("%d\n", root->data);
+
+    printBinaryTree(root->left, n+1);
+    printBinaryTree(root->right, n+1);
+}
+
 void removeLink(TBinaryTree *parent, TBinaryTree *child)
 {
     if (isRightChild(parent, child))

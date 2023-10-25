@@ -45,11 +45,13 @@ int main()
   int value = 10;
   TBinaryTree* node = search(root, value);
   if(node != NULL) {
-  printf("\nFound node with key %d", value);  
+    printf("\nFound node with key %d\n\n", value);  
   } else {
-  printf("\nNode not found");
+    printf("\nNode not found\n\n");
   }
 
+  printf("\n\n");
+  printBinaryTree(root, 0);
   // Delete tree  
   freeBinaryTree(root);
 
