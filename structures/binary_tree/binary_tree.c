@@ -173,37 +173,66 @@ TBinaryTree* searchMax(TBinaryTree *tree)
 void preOrderTraversal(TBinaryTree *tree)
 {
     if (tree == NULL)
+    {
+        printf("<>");
         return;
+    }
+        
     
-    printf("%d ", tree->data);
+    printf("<");
 
-    preOrderTraversal(tree->left);
+        printf("%d", tree->data);
 
-    preOrderTraversal(tree->right);
+        preOrderTraversal(tree->left);
+        
+        preOrderTraversal(tree->right);
+        
+
+    printf(">");
 }
 
 void inOrderTraversal(TBinaryTree *tree)
 {
     if (tree == NULL)
+    {
+        printf("<>");
         return;
+    }
+        
     
-    inOrderTraversal(tree->left);
+    printf("<");
 
-    printf("%d ", tree->data);
 
-    inOrderTraversal(tree->right);
+        inOrderTraversal(tree->left);
+        
+        printf("%d", tree->data);
+
+        inOrderTraversal(tree->right);
+        
+
+    printf(">");
 }
 
 void postOrderTraversal(TBinaryTree *tree) 
 {
     if (tree == NULL)
+    {
+        printf("<>");
         return;
+    }
+        
     
-    postOrderTraversal(tree->left);
+    printf("<");
 
-    postOrderTraversal(tree->right);
 
-    printf("%d ", tree->data);
+        postOrderTraversal(tree->left);
+        
+
+        postOrderTraversal(tree->right);
+        
+        printf("%d", tree->data);
+
+    printf(">");
 }
 
 void freeBinaryTree(TBinaryTree *tree)

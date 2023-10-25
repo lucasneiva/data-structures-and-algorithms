@@ -6,20 +6,18 @@ int main()
   TBinaryTree *root = NULL;
   
   // Insert nodes
-  insertNode(&root, 15);
-  insertNode(&root, 10); 
-  insertNode(&root, 20);
-  insertNode(&root, 8);
-  insertNode(&root, 12);
-  insertNode(&root, 17);
+  insertNode(&root, 30);
+  insertNode(&root, 20); 
+  insertNode(&root, 40);
   insertNode(&root, 25);
-  insertNode(&root, 1);
+  insertNode(&root, 35);
+  insertNode(&root, 45);
 
   // Delete Node
   // deleteNode(root, 8);
   // deleteNode(root, 20);
   // deleteNode(root, 12);
-
+  /*
   // Find size
   printf("\nSize: %d", findSize(root));
 
@@ -30,11 +28,18 @@ int main()
   // Find level
   int data = 1;
   printf("\nLevel of %d: %d", data, findLevel(root, data));
+  */
 
   // Traverse tree
-  printf("\nPreorder traversal: ");
+  //printf("\nPreorder traversal: ");
   preOrderTraversal(root);
+  printf("\n");
+  inOrderTraversal(root);
+  printf("\n");
+  postOrderTraversal(root);
+  printf("\n");
 
+  /*
   printf("\nInorder traversal: ");
   inOrderTraversal(root);
 
@@ -52,6 +57,7 @@ int main()
 
   printf("\n\n");
   printBinaryTree(root, 0);
+  */
   // Delete tree  
   freeBinaryTree(root);
 
